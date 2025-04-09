@@ -5,9 +5,9 @@ import express from "express";
 
 const router = express.Router();
 
-router.post("/", authMiddleware, createPost);
-router.get("/", getAllPosts);
-router.put("/:id", authMiddleware, updatePost);
-router.delete("/:id", authMiddleware, deletePost);
+router.post("/create", authMiddleware, createPost);
+router.get("/get",authMiddleware ,getAllPosts);
+router.put("/update/:id", authMiddleware, updatePost);
+router.delete("/delete/:id", authMiddleware, deletePost);
 
 export default router;
