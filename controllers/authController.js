@@ -27,13 +27,12 @@ const login = async (req, res) => {
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
     // Generate JWT Token
-    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, {expiresIn: "1h"});
 
     // Store JWT in HttpOnly cookie
     res.cookie("token", token, {
       httpOnly: true,
+      sameSite:"Strict",
       secure: process.env.NODE_ENV === "production",
     });
 
