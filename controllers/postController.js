@@ -1,6 +1,6 @@
-const Post = require("../models/Post.js");
+import {Post} from "../models/Post.js";
 
-const createPost = async (req, res) => {
+export const createPost = async (req, res) => {
   try {
     const { title, content } = req.body;
     const post = new Post({ title, content, userId: req.user.id });
@@ -12,12 +12,12 @@ const createPost = async (req, res) => {
   }
 };
 
-const getAllPosts = async (req, res) => {
+export const getAllPosts = async (req, res) => {
   const posts = await Post.find();
   res.json(posts);
 };
 
-const updatePost = async (req, res) => {
+export const updatePost = async (req, res) => {
   const { title, content } = req.body;
   const post = await Post.findById(req.params.id);
 
@@ -32,7 +32,7 @@ const updatePost = async (req, res) => {
   res.json({ message: "Post updated", post });
 };
 
-const deletePost = async (req, res) => {
+export const deletePost = async (req, res) => {
   const post = await Post.findById(req.params.id);
 
   if (!post || post.userId.toString() !== req.user.id) {
@@ -43,4 +43,4 @@ const deletePost = async (req, res) => {
   res.json({ message: "Post deleted" });
 };
 
-module.exports = { createPost, getAllPosts, updatePost, deletePost };
+

@@ -1,8 +1,11 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
-const connectDB = require("./config/db.js");
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import connectDB from "./config/db.js";
+
+import authRoutes from "./routes/authRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -16,8 +19,8 @@ app.use(cookieParser()); // to parse cookies from request headers
 connectDB();
 
 // Routes
-app.use("/auth", require("./routes/authRoutes.js")); // http://localhost:5000/auth
-app.use("/posts", require("./routes/postRoutes.js")); // http://localhost:5000/posts
+app.use("/auth", authRoutes); // http://localhost:5000/auth
+app.use("/posts", postRoutes); // http://localhost:5000/posts
 
 // Start Server
 const PORT = process.env.PORT || 5000;
