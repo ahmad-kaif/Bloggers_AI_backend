@@ -8,9 +8,8 @@ dotenv.config();
 
 const app = express();
 
-
 app.use(express.json());  // to parse request body into JSON
-app.use(cors({ credentials: true, origin: "http://localhost:3000" })); // Allow CORS for frontend
+app.use(cors({ credentials: true, origin: "http://localhost:5173" })); // Allow CORS for frontend
 app.use(cookieParser()); // to parse cookies from request headers
 
 connectDB();
