@@ -6,9 +6,10 @@ export const createPost = async (req, res) => {
     const { title, content } = req.body;
 
     // 🔍 Analyze sentiment via Python API
-    const { data } = await axios.post("http://localhost:5001/analyze", {
+    const { data } = await axios.post("http://sentiment:5001/analyze", {
       text: content,
     });
+    
 
     const sentiment = data.polarity;
     // console.log("Sentiment:", sentiment);
