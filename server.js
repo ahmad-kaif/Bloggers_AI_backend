@@ -9,7 +9,11 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());  // to parse request body into JSON
-app.use(cors({ credentials: true, origin: "http://localhost:5173" })); // Allow CORS for frontend
+app.use(cors({
+  origin: "http://localhost:5173", // Replace with your frontend origin
+  credentials: true
+}));
+
 app.use(cookieParser()); // to parse cookies from request headers
 
 connectDB();
@@ -18,8 +22,8 @@ connectDB();
 import authRoutes from "./routes/authRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 
-app.use("/auth", authRoutes); // http://localhost:5000/auth
-app.use("/posts", postRoutes); // http://localhost:5000/posts
+app.use("/auth", authRoutes); // http://localhost:8080/auth
+app.use("/posts", postRoutes); // http://localhost:8080/posts
 
 
 const PORT = process.env.PORT || 5000;

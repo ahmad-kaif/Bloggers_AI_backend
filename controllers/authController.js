@@ -7,14 +7,20 @@ export const register = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ email, password: hashedPassword });
-    if(user){
+    // ✅ Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
-    await user.save();
-    
-    res.json({ message: "User registered!" });
+
+    // ✅ Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // ✅ Create and save new user
+    const newUser = new User({ email, password: hashedPassword });
+    await newUser.save();
+
+    res.status(201).json({ message: "User registered!" });
   } catch (error) {
     res.status(500).json({ message: "Error registering user", error });
   }
@@ -36,11 +42,11 @@ export const login = async (req, res) => {
     // Store JWT in HttpOnly cookie
     res.cookie("token", token, {
       httpOnly: true,
-      sameSite:"Strict",
-      secure: process.env.NODE_ENV === "production",
+      secure:true,
+      sameSite:"None",
     });
 
-    res.json({ message: "Logged in successfully" });
+    res.status(201).json({ message: "Logged in successfully!" });
   } catch (error) {
     res.status(500).json({ message: "Login failed", error });
   }
@@ -50,4 +56,5 @@ export const logout = (req, res) => {
   res.clearCookie("token");
   res.json({ message: "Logged out successfully" });
 };
+
 

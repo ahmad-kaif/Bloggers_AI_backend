@@ -6,23 +6,28 @@ export const createPost = async (req, res) => {
     const { title, content } = req.body;
 
     // 🔍 Analyze sentiment via Python API
-    const { data } = await axios.post("http://sentiment:5001/analyze", {
+    const { data } = await axios.post("http://localhost:5001/analyze", {
       text: content,
     });
-    
 
     const sentiment = data.polarity;
     // console.log("Sentiment:", sentiment);
 
     let sentimentEmoji = "😐";
 
-    if (sentiment > 0.3) {
+    if (sentiment > 0.2) {
       sentimentEmoji = "😊"; // Positive
-    } else if (sentiment < -0.3) {
+    } else if (sentiment < -0.2) {
       sentimentEmoji = "😞"; // Negative
     }
 
-    const post = new Post({ title, content, userId: req.user.id, sentiment, mood:sentimentEmoji });
+    const post = new Post({
+      title,
+      content,
+      userId: req.user.id,
+      sentiment,
+      mood: sentimentEmoji,
+    });
 
     await post.save();
     res.json({ message: "Post created", post });
@@ -36,8 +41,13 @@ export const createPost = async (req, res) => {
 };
 
 export const getAllPosts = async (req, res) => {
-  const posts = await Post.find();
-  res.json(posts);
+  try {
+    const posts = await Post.find({ userId: req.user.id }); // Only fetch user's posts
+    res.json(posts);
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    res.status(500).json({ message: "Error fetching posts" });
+  }
 };
 
 export const updatePost = async (req, res) => {
