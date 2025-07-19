@@ -9,9 +9,9 @@ export const createPost = async (req, res) => {
     const { data } = await axios.post("http://localhost:5001/analyze", {
       text: content,
     });
-
+    console.log(data)
     const sentiment = data.polarity;
-    // console.log("Sentiment:", sentiment);
+    console.log("Sentimenttttttt:", sentiment);
 
     let sentimentEmoji = "😐";
 
@@ -51,19 +51,42 @@ export const getAllPosts = async (req, res) => {
 };
 
 export const updatePost = async (req, res) => {
-  const { title, content } = req.body;
-  const post = await Post.findById(req.params.id);
+  try {
+    const { title, content } = req.body;
+    const post = await Post.findById(req.params.id);
 
-  if (!post || post.userId.toString() !== req.user.id) {
-    return res.status(403).json({ message: "Not authorized" });
+    if (!post || post.userId.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    // 🔍 Re-analyze sentiment on updated content
+    const { data } = await axios.post("http://localhost:5001/analyze", {
+      text: content,
+    });
+
+    const sentiment = data.polarity;
+    let sentimentEmoji = "😐";
+    if (sentiment > 0.2) {
+      sentimentEmoji = "😊";
+    } else if (sentiment < -0.2) {
+      sentimentEmoji = "😞";
+    }
+
+    // 📝 Update fields
+    post.title = title;
+    post.content = content;
+    post.sentiment = sentiment;
+    post.mood = sentimentEmoji;
+
+    await post.save();
+
+    res.json({ message: "Post updated", post });
+  } catch (error) {
+    console.error("Error updating post:", error?.response?.data || error.message || error);
+    res.status(500).json({ message: "Error updating post", error });
   }
-
-  post.title = title;
-  post.content = content;
-  await post.save();
-
-  res.json({ message: "Post updated", post });
 };
+
 
 export const deletePost = async (req, res) => {
   const post = await Post.findById(req.params.id);

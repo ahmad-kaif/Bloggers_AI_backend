@@ -10,11 +10,11 @@ const app = express();
 
 app.use(express.json());  // to parse request body into JSON
 app.use(cors({
-  origin: "http://localhost:5173", // Replace with your frontend origin
+  origin: "http://localhost:5173", 
   credentials: true
 }));
 
-app.use(cookieParser()); // to parse cookies from request headers
+app.use(cookieParser()); 
 
 connectDB();
 
