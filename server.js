@@ -10,7 +10,8 @@ const app = express();
 
 app.use(express.json());  // to parse request body into JSON
 app.use(cors({
-  origin: "http://localhost:5173", 
+  origin: "https://sentimental-blogs-client.onrender.com", 
+  // origin: "http://localhost:5173", 
   credentials: true
 }));
 

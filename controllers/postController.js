@@ -5,8 +5,11 @@ export const createPost = async (req, res) => {
   try {
     const { title, content } = req.body;
 
+    const python_url_production="https://sentiment-service-bloggersai.onrender.com";
+    const python_url_development="http://localhost:5001";
+
     // 🔍 Analyze sentiment via Python API
-    const { data } = await axios.post("http://localhost:5001/analyze", {
+    const { data } = await axios.post(`${python_url_production}/analyze`, {
       text: content,
     });
     console.log(data)
@@ -60,7 +63,7 @@ export const updatePost = async (req, res) => {
     }
 
     // 🔍 Re-analyze sentiment on updated content
-    const { data } = await axios.post("http://localhost:5001/analyze", {
+    const { data } = await axios.post(`${python_url_production}/analyze`, {
       text: content,
     });
 
