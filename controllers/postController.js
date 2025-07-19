@@ -7,7 +7,7 @@ export const createPost = async (req, res) => {
 
     const python_url_production="https://sentiment-service-bloggersai.onrender.com";
     const python_url_development="http://localhost:5001";
-
+    
     // 🔍 Analyze sentiment via Python API
     const { data } = await axios.post(`${python_url_production}/analyze`, {
       text: content,
